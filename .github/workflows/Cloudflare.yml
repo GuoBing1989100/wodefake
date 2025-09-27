@@ -1,0 +1,29 @@
+name: Auto Update Worker
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 1 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 初始化仓库
+        uses: actions/checkout@v4
+
+      # ... 这里保留你之前的更新逻辑 ...
+
+      - name: 提交更改
+        if: env.UPDATE_NEEDED == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🔄 自动同步最新 Worker 版本：${{ env.TAG_NAME }}"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+          push_options: --force
